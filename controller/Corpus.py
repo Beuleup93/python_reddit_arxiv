@@ -308,6 +308,14 @@ class Corpus():
         corpus_reddit = ' '.join(sources_docs['Reddit'])
         corpus_arxiv = ' '.join(sources_docs['Arxiv'])
         return (corpus_reddit,corpus_arxiv)
+        
+    def find_documents_authors(self):
+        author_documents = defaultdict(list)
+        tokenizer = nltk.RegexpTokenizer(r'\w+')
+        for nauth,author in self.authors.items():
+            for ndoc,doc in author.get_production().items():
+                author_documents[author] += tokenizer.tokenize(doc.get_text().lower())
+        return author_documents
     
     
 ################################################################################################
