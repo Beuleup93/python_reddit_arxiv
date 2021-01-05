@@ -380,7 +380,7 @@ df = df.sort_values(by = 'total', ascending = False)
 df.plot(figsize=(10,5),kind='bar', color=["#FFA07A","#885533"], title='Top 200 publications Redit-Arxiv par nombre de mots')
 
 # Récupération des comptages
-freq,stats,voc = corpus_reddit.freq_stats_corpus()
+freq,stats,voc = corpus_reddit.freq_stats_corpus1()
 df = pandas.DataFrame.from_dict(stats, orient='index')
 df = df.sort_values(by = 'total', ascending = False)
 df.plot(figsize=(30,10),kind='bar', color=["#008000","#aa5588"], title='Top 100 publications Redit par nombre de mots')
