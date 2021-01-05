@@ -1,6 +1,38 @@
 # -*- coding: utf-8 -*-
 import sys
-import time
+
+## inport corpus
+
+import datetime as dt
+
+import pickle
+import re
+from collections import defaultdict
+import praw
+import urllib.request
+import xmltodict   
+import datetime as dt
+import pandas
+import string
+import nltk
+from nltk.stem import PorterStemmer
+from nltk.stem import LancasterStemmer
+from nltk.stem import WordNetLemmatizer
+from nltk.tokenize import word_tokenize
+from nltk.probability import FreqDist
+
+from sklearn.feature_extraction.text import TfidfTransformer
+from sklearn.feature_extraction.text import TfidfVectorizer
+#Import Class
+import os
+os.chdir('../modele')
+from ..modele.Document import Document
+from Author import Author
+from RedditDocument import RedditDocument
+from ArxivDocument import ArxivDocument
+from Document import Document
+
+#########
 
 import numpy as np
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
@@ -23,6 +55,9 @@ except ImportError:
 import interface_support as IS
 from interface_support import *
 
+import os
+os.chdir('../controller')
+from Corpus import Corpus
 
 def vp_start_gui():
     '''Starting point when module is the main routine.'''
@@ -300,6 +335,28 @@ class Interface:
         self.ButtonRecherche.configure(pady="0")
         self.ButtonRecherche.configure(text='''Recherche''')
         
+        #####instance corpus
+        
+        self.corpus_general=Corpus("Corona")
+        remplir_corpus(self.corpus_general)
+    
+    #action boutton 1
+    def action_corpus(self):
+        var=IS.comboAff.get()
+        
+        if var=="tous":
+            freq,stats,voc = self.corpus_general.freq_stats_corpus2(True)
+            fig=Figure(figsize=(10,5))
+            a = fig.add_subplot(111)
+            df = pandas.DataFrame.from_dict(stats, orient='index')
+            df = df.sort_values(by = 'total', ascending = False)
+            a.plot(df)
+            
+            canvas = FigureCanvasTkAgg(fig, master=self.resultat)
+            canvas.get_tk_widget().pack()
+            canvas.draw()
+    
+        
         # graphe
     def plot (self):
             x=np.array ([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
@@ -345,6 +402,56 @@ def getElement(*args):
    var11 = IS.TcheckKey.get()
    var12 = IS.TcheckAnn.get()
    var13 = IS.limite.get()
+
+
+   
+def remplir_corpus(obj):
+    ######### Source Reddit #########
+    reddit = praw.Reddit(client_id='2R8dyFhAMrONHA', client_secret='HKBF3vfSYP6YOAPS4hgXf68OOJ4', user_agent='Reddit WebScraping')
+    hot_posts = reddit.subreddit('Coronavirus').hot(limit=100)
+
+    for post in hot_posts:
+        # Get comments of post i
+        try:
+          submission = reddit.submission(url=post.url);
+          nbComments = len(submission.comments)
+        except:
+          pass
+        datet = dt.datetime.fromtimestamp(post.created)
+        txt = post.title + ". "+ post.selftext
+        txt = txt.replace('\n', ' ')
+        txt = txt.replace('\r', ' ')
+        doc = RedditDocument(nbComments,
+                             datet,
+                             post.title,
+                             post.author_fullname,
+                             txt,
+                             post.url)
+        obj.add_doc(doc)
+
+    ######### Source Reddit #########
+    url = 'http://export.arxiv.org/api/query?search_query=all:covid&start=0&max_results=100'
+    data =  urllib.request.urlopen(url).read().decode()
+    docs = xmltodict.parse(data)['feed']['entry'] # Liste de dictionnaire
+    
+    for i in docs:
+        datet = dt.datetime.strptime(i['published'], '%Y-%m-%dT%H:%M:%SZ')
+        try:
+            author = [aut['name'] for aut in i['author']][0]
+        except:
+            author = i['author']['name']
+        txt = i['title']+ ". " + i['summary']
+        txt = txt.replace('\n', ' ')
+        txt = txt.replace('\r', ' ')
+        doc = ArxivDocument(i['author'],
+                       datet,
+                       i['title'],
+                       author,
+                       txt,
+                       i['id']
+                       )
+        obj.add_doc(doc)
+    
    
 def alert():
    showinfo("alerte", "Bravo!")
