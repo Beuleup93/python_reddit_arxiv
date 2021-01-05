@@ -179,7 +179,7 @@ class Corpus():
       stats, freq = dict(), dict() 
       for author, word in freq_stats.items():
         freq[author] = fq = nltk.FreqDist(word)
-        stats[author] = {'total': len(word)} 
+        stats[author] = {'total': len(word), 'unique': len(fq.keys())} 
       return (freq, stats, freq_stats)
 
     # Suppression des stops word
@@ -377,12 +377,23 @@ for i in docs:
 freq,stats,voc = corpus_global.freq_stats_corpus2(True)
 df = pandas.DataFrame.from_dict(stats, orient='index')
 df = df.sort_values(by = 'total', ascending = False)
-b=df.plot(figsize=(10,5),kind='bar', color=["#FFA07A","#885533"], title='Top 200 publications Redit-Arxiv par nombre de mots')
+fig = df.plot(figsize=(10,5),kind='bar', color=["#FFA07A","#885533"], title='Top 200 publications Redit-Arxiv par nombre de mots').get_figure()
+fig.savefig('histogramme/corpus/freq_corpus.png')
+
+# Récupération des comptages
+# Affichage des fréquences de mots aprés Tokenization(sans nettoyage)
 
 # Récupération des comptages
 freq,stats,voc = corpus_reddit.freq_stats_corpus1()
 df = pandas.DataFrame.from_dict(stats, orient='index')
-df = df.sort_values(by = 'total', ascending = False)
-df.plot(figsize=(30,10),kind='bar', color=["#008000","#aa5588"], title='Top 100 publications Redit par nombre de mots')
+df = df.sort_values(by = 'total', ascending = False).head(30)
+fig = df.plot(figsize=(10,5),kind='bar', color=["#008000","#aa5588"], title='Top 100 publications Redit par nombre de mots').get_figure()
+fig.savefig('histogramme/reddit/freq_reddit.png')
 
+# Récupération des comptages
+freq,stats,voc = corpus_arxiv.freq_stats_corpus1()
+df = pandas.DataFrame.from_dict(stats, orient='index')
+df = df.sort_values(by = 'total', ascending = False).head(30)
+fig = df.plot(figsize=(10,5),kind='bar', color=["#008000","#aa5588"], title='Top 100 publications Arxiv par nombre de mots').get_figure()
+fig.savefig('histogramme/arxiv/arxiv.png')
 
