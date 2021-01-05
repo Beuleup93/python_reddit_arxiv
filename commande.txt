@@ -1,0 +1,25 @@
+cd D:\dossier personelle\Lyon 2\M1\Programation Avanc‚e\projet
+cd "D:\dossier personelle\Lyon 2\M1\Programation Avanc‚e\projet"
+cd "D:/dossier personelle/Lyon 2/M1/Programation Avanc‚e/projet"
+cd D:/dossier personelle/Lyon 2/M1/Programation Avanc‚e/projet
+ls
+cd D:
+D:
+git clone https://github.com/Beuleup93/python_reddit_arxiv.git
+cd python
+cd python_reddit_arxiv
+git status
+git add .
+git status
+git commit -m "First commit interface"
+git config --global user.email "chissihamza96@outlook.com"
+git config --global user.name "chissi007"
+git commit -m "First commit interface"
+git pull
+git push
+history > command.txt
+history 
+.history 
+/history 
+doskey /history
+doskey /history > commande.txt

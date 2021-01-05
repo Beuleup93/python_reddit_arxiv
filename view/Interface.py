@@ -81,7 +81,7 @@ class Interface:
         self.Titre.configure(disabledforeground="#a3a3a3")
         self.Titre.configure(font="-family {8514oem} -size 18")
         self.Titre.configure(foreground="#000000")
-        self.Titre.configure(text='''Analyseur des Corpus''')
+        self.Titre.configure(text='''Analyse Comparatif des Corpus''')
 
         self.menubar = tk.Menu(top,font="TkMenuFont",bg=_bgcolor,fg=_fgcolor)
         top.configure(menu = self.menubar)
@@ -90,11 +90,11 @@ class Interface:
         self.zone_recherche = tk.LabelFrame(top)
         # self.zone_recherche.place(relx=0.223, rely=0.197, relheight=0.17
         #         , relwidth=0.507)
-        self.zone_recherche.place(x=10, y=50, relheight=0.17
+        self.zone_recherche.place(x=10, y=50, relheight=0.13
                  , width=300)
         self.zone_recherche.configure(relief='groove')
         self.zone_recherche.configure(foreground="black")
-        self.zone_recherche.configure(text='''zône de recherche''')
+        self.zone_recherche.configure(text='''recherche''')
         self.zone_recherche.configure(background="#d9d9d9")
         
         
@@ -102,16 +102,14 @@ class Interface:
         self.Nom_auteur = tk.Label(self.zone_recherche)
         self.Nom_auteur.place(relx=0.018, rely=0.299, height=17.3, width=75.48
                 , bordermode='ignore')
-        self.Nom_auteur.configure(background="#d9d9d9")
-        self.Nom_auteur.configure(disabledforeground="#a3a3a3")
-        self.Nom_auteur.configure(foreground="#000000")
-        self.Nom_auteur.configure(text='''Mot clé''')
+        self.Nom_auteur.configure(background="#d9d9d9",disabledforeground="#a3a3a3"
+                                  ,foreground="#000000",text='''Mot clé''' )
         
         #champ de saisie pour le mot clé
-        global nomAut
-        nomAut=tk.StringVar()
-        self.EntryNA = tk.Entry(self.zone_recherche, textvariable=nomAut)
-        self.EntryNA.place(relx=0.331, rely=0.272, height=24, relwidth=0.504
+        global keyword
+        keyword=tk.StringVar()
+        self.EntryNA = tk.Entry(self.zone_recherche, textvariable=keyword)
+        self.EntryNA.place(relx=0.250, rely=0.272, height=24, width=130
                 , bordermode='ignore')
         self.EntryNA.configure(background="white")
         self.EntryNA.configure(disabledforeground="#a3a3a3")
@@ -123,7 +121,7 @@ class Interface:
         self.parametre = tk.LabelFrame(top)
         # self.parametre.place(relx=0.112, rely=0.44, relheight=0.439
         #         , relwidth=0.764)
-        self.parametre.place(x=10, y=200, relheight=0.439
+        self.parametre.place(x=10, y=150, height=400
                  , width=300)
         self.parametre.configure(relief='groove')
         self.parametre.configure(foreground="black")
@@ -134,11 +132,11 @@ class Interface:
         self.resultat = tk.LabelFrame(top)
         # self.parametre.place(relx=0.112, rely=0.44, relheight=0.439
         #         , relwidth=0.764)
-        self.resultat.place(x=400, y=50, height=550
+        self.resultat.place(x=320, y=50, height=550
                  , width=900)
         self.resultat.configure(relief='groove')
         self.resultat.configure(foreground="black")
-        self.resultat.configure(text='''Visualisation''')
+        self.resultat.configure(text=' ')
         self.resultat.configure(background="#d9d9d9")
         
 
@@ -153,19 +151,19 @@ class Interface:
         self.Affichage.configure(text='''Corpus''')
         
         #champ selectionné sur choix-corpus
-        # On fait le filtre selon la table authors ou Publication
         self.TComboboxAff = ttk.Combobox(self.parametre)
-        self.TComboboxAff.place(x=70, y=30, relheight=0.082
-                , relwidth=0.284, bordermode='ignore')
+        self.TComboboxAff.place(x=70, y=30, height=24
+                , width=80, bordermode='ignore')
         self.TComboboxAff.configure(textvariable=IS.comboAff)
-        self.TComboboxAff.configure(takefocus="")
+        self.TComboboxAff.configure(validatecommand=alert)
+        #self.TComboboxAff.configure(takefocus="")
         self.TComboboxAff.configure(cursor="fleur")
         self.TComboboxAff.configure(values=["Reddit","Arxiv","Tous"])
         
         
         #Fram Filtrage temporelle
         self.temporelle = tk.LabelFrame(self.parametre)
-        self.temporelle.place(relx=0.03, rely=0.20, relheight=0.400
+        self.temporelle.place(relx=0.03, rely=0.20, height=130
                 , width=250)
         self.temporelle.configure(relief='groove')
         self.temporelle.configure(foreground="black")
@@ -175,7 +173,7 @@ class Interface:
         
         #◘Label jour
         self.jour = tk.Label(self.temporelle)
-        self.jour.place(relx=0.030, rely=0.30
+        self.jour.place(x=10, y=30
                 , bordermode='ignore')
         self.jour.configure(background="#d9d9d9")
         self.jour.configure(disabledforeground="#a3a3a3")
@@ -184,8 +182,8 @@ class Interface:
         
         #champ saisie jour
         self.entryJour = ttk.Combobox(self.temporelle)
-        self.entryJour.place(relx=0.030, rely=0.60, relheight=0.200
-                , relwidth=0.200, bordermode='ignore')
+        self.entryJour.place(x=10, y=60, height=24
+                , width=65, bordermode='ignore')
         self.entryJour.configure(textvariable="")
         self.entryJour.configure(takefocus="")
         #la liste jour contient les jours d'un mois
@@ -196,7 +194,7 @@ class Interface:
         
         #◘Label Mois
         self.mois = tk.Label(self.temporelle)
-        self.mois.place(relx=0.40, rely=0.30
+        self.mois.place(x=85, y=30
                 , bordermode='ignore')
         self.mois.configure(background="#d9d9d9")
         self.mois.configure(disabledforeground="#a3a3a3")
@@ -205,7 +203,7 @@ class Interface:
         
         #champ saisie Mois
         self.entryMois = ttk.Combobox(self.temporelle)
-        self.entryMois.place(relx=0.30, rely=0.60, relheight=0.200
+        self.entryMois.place(x=85, y=60, height=24
                 , width=80, bordermode='ignore')
         self.entryMois.configure(textvariable="")
         self.entryMois.configure(takefocus="")
@@ -216,7 +214,7 @@ class Interface:
         
         #◘Label Année
         self.annee = tk.Label(self.temporelle)
-        self.annee.place(relx=0.70, rely=0.30
+        self.annee.place(x=175, y=30
                 , bordermode='ignore')
         self.annee.configure(background="#d9d9d9")
         self.annee.configure(disabledforeground="#a3a3a3")
@@ -225,8 +223,8 @@ class Interface:
         
         #champ saisie Année
         self.entryAnnee = ttk.Combobox(self.temporelle)
-        self.entryAnnee.place(relx=0.70, rely=0.60, relheight=0.200
-                , relwidth=0.200, bordermode='ignore')
+        self.entryAnnee.place(x=175, y=60, height=24
+                , width=65, bordermode='ignore')
         self.entryAnnee.configure(textvariable=IS.annee)
         self.entryAnnee.configure(takefocus="")
         years=['2018','2019','2020','2021']
@@ -272,10 +270,26 @@ class Interface:
         self.menubar.add_cascade(label="Nettoyage & Normalisation", menu=self.menu1)
         top.config(menu=self.menubar)
         
-        ### Frame cadre resultat
+        ############ gestion des bouttons #####################
+        
+        # 1- boutton sur le mot clé
+        
+        self.Button1 = tk.Button(self.zone_recherche, text="recherche", command="")
+        self.Button1.place(x=230,y=10, height=24)
+        
+        # 2- boutton choix corpus
+        
+        self.Button2 = tk.Button(self.parametre, text="recherche", command="")
+        self.Button2.place(x=230,y=12, height=24)
+        
+        # 3- boutton d'ajustement de la date
+        
+        self.Button3 = tk.Button(self.temporelle, text="recherche", command="")
+        self.Button3.pack(side=tk.BOTTOM)
+        
         #bouton recherche qui point vers la fonction getElement()
         self.ButtonRecherche = tk.Button(top, command=getElement)
-        self.ButtonRecherche.place(x=10, y=550, height=28, width=76.13)
+        self.ButtonRecherche.place(x=10, y=575, height=28, width=76.13)
         self.ButtonRecherche.configure(activebackground="#ececec")
         self.ButtonRecherche.configure(activeforeground="#000000")
         self.ButtonRecherche.configure(background="#d9d9d9")
@@ -306,6 +320,10 @@ class Interface:
             canvas = FigureCanvasTkAgg(fig, master=self.resultat)
             canvas.get_tk_widget().pack()
             canvas.draw()
+    def callback(eventObject):
+        ttk.showinfo("alert",eventObject)
+
+    #self.TComboboxAff.bind("<<ComboboxSelected>>", callback)
     
 #fonction des recuperation des éléments
 
