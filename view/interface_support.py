@@ -23,13 +23,18 @@ def set_Tk_var():
     global nomAut   #variable autheur
     nomAut=tk.StringVar()
     
-        
-    global categorie # variable catégorie
-    categorie =tk.StringVar()
+    global jour
+    jour=tk.StringVar()
+    
+    global mois
+    mois=tk.StringVar()
     
     
     global annee
     annee =tk.StringVar() #variable annee
+    
+    global limite
+    limite =tk.IntVar()
     
     
     global nbAuthor
@@ -37,6 +42,7 @@ def set_Tk_var():
     
     global comboAff
     comboAff=tk.StringVar()
+    comboAff.set("Tous") #valeur par defdéfaut
     
     
     global TcheckAut
@@ -49,8 +55,6 @@ def set_Tk_var():
     global TcheckAnn
     TcheckAnn = tk.IntVar()
     
-    global limite
-    limite = tk.IntVar()
     
     
 def init(top, gui, *args, **kwargs):

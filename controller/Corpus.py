@@ -20,6 +20,7 @@ from nltk.stem import LancasterStemmer
 from nltk.stem import WordNetLemmatizer
 from nltk.tokenize import word_tokenize
 from nltk.probability import FreqDist
+from collections import Counter
 #from nltk.book import *
 from sklearn.feature_extraction.text import TfidfTransformer
 from sklearn.feature_extraction.text import TfidfVectorizer
@@ -233,7 +234,7 @@ class Corpus():
         stats[key] = {'total': len(word), 'unique': len(fq.keys())} 
       return (freq, stats, freq_stats)
     
-    # Freq et stats aprés suppression des stop word 
+    # Freq et stats aprés stemming 
     def freq_stats_corpus4(self, bySource = False):
       porter=PorterStemmer()
       tokenizer = nltk.RegexpTokenizer(r'\w+')
@@ -317,83 +318,214 @@ class Corpus():
                 author_documents[author] += tokenizer.tokenize(doc.get_text().lower())
         return author_documents
     
+    #chargement
+    def remplir_corpus(self):
+        obj_reddit=Corpus("corona")
+        obj_arxiv=Corpus("corona")
+        obj_general=Corpus("corona")
+    ######### Source Reddit #########
+        reddit = praw.Reddit(client_id='2R8dyFhAMrONHA', client_secret='HKBF3vfSYP6YOAPS4hgXf68OOJ4', user_agent='Reddit WebScraping')
+        hot_posts = reddit.subreddit('Coronavirus').hot(limit=100)
+    
+        for post in hot_posts:
+            # Get comments of post i
+            try:
+              submission = reddit.submission(url=post.url);
+              nbComments = len(submission.comments)
+            except:
+              pass
+            datet = dt.datetime.fromtimestamp(post.created)
+            txt = post.title + ". "+ post.selftext
+            txt = txt.replace('\n', ' ')
+            txt = txt.replace('\r', ' ')
+            doc = RedditDocument(nbComments,
+                                 datet,
+                                 post.title,
+                                 post.author_fullname,
+                                 txt,
+                                 post.url)
+            obj_general.add_doc(doc)
+            obj_reddit.add_doc(doc)
+            
+    
+        ######### Source Arxiv #########
+        url = 'http://export.arxiv.org/api/query?search_query=all:covid&start=0&max_results=100'
+        data =  urllib.request.urlopen(url).read().decode()
+        docs = xmltodict.parse(data)['feed']['entry'] # Liste de dictionnaire
+        
+        for i in docs:
+            datet = dt.datetime.strptime(i['published'], '%Y-%m-%dT%H:%M:%SZ')
+            try:
+                author = [aut['name'] for aut in i['author']][0]
+            except:
+                author = i['author']['name']
+            txt = i['title']+ ". " + i['summary']
+            txt = txt.replace('\n', ' ')
+            txt = txt.replace('\r', ' ')
+            doc = ArxivDocument(i['author'],
+                           datet,
+                           i['title'],
+                           author,
+                           txt,
+                           i['id']
+                           )
+            obj_general.add_doc(doc)
+            obj_arxiv.add_doc(doc)
+            
+        return (obj_general, obj_reddit, obj_arxiv)
+    
+    
+     # format date: '2021-01-02'
+    def most_frequent_word(self, date, nb_word):
+      self.vocabulaires = list()
+      y,m,d = [int(x) for x in date.split('-')] 
+      date_choosed = dt.date(y,m,d)
+      tokenizer = nltk.RegexpTokenizer(r'\w+')
+      for k,v in self.collection.items():
+        date_document = v.get_date()
+        if date_document.date() == date_choosed:
+          chaine = v.get_text().lower()
+          tokensList = tokenizer.tokenize(chaine)
+          self.vocabulaires += tokensList
+        #Comptons les occurence de mots dans le la liste vocabulaires
+      self.vocabulaires = self.normalization(self.vocabulaires)
+      occurences = Counter(self.vocabulaires)
+      return occurences.most_common(nb_word)
+
+    # format: '2021'
+    def most_frequent_word_by_year(self, year, nb_word):
+      self.vocabulaires = list()
+      tokenizer = nltk.RegexpTokenizer(r'\w+')
+      for k,v in self.collection.items():
+        date_document = v.get_date()
+        if date_document.strftime('%Y') == year:
+          chaine = v.get_text().lower()
+          tokensList = tokenizer.tokenize(chaine)
+          self.vocabulaires += tokensList
+        #Comptons les occurence de mots dans le la liste vocabulaires
+      self.vocabulaires = self.normalization(self.vocabulaires)
+      occurences = Counter(self.vocabulaires)
+      return occurences.most_common(nb_word)
+    
+    # format: 'December'
+    def most_frequent_word_by_month(self, month, nb_word):
+      self.vocabulaires = list()
+      tokenizer = nltk.RegexpTokenizer(r'\w+')
+      for k,v in self.collection.items():
+        date_document = v.get_date()
+        if date_document.strftime('%B') == month:
+          chaine = v.get_text().lower()
+          tokensList = tokenizer.tokenize(chaine)
+          self.vocabulaires += tokensList
+        #Comptons les occurence de mots dans le la liste vocabulaires
+      self.vocabulaires = self.normalization(self.vocabulaires)
+      occurences = Counter(self.vocabulaires)
+      return occurences.most_common(nb_word)
+
+    # format: '01'
+    def most_frequent_word_by_day(self, jour,nb_word):
+      self.vocabulaires = list()
+      tokenizer = nltk.RegexpTokenizer(r'\w+')
+      for k,v in self.collection.items():
+          date_document = v.get_date()
+          if date_document.strftime('%d') == jour:
+            chaine = v.get_text().lower()
+            tokensList = tokenizer.tokenize(chaine)
+            self.vocabulaires += tokensList
+        #Comptons les occurence de mots dans le la liste vocabulaires
+      self.vocabulaires = self.normalization(self.vocabulaires)
+      occurences = Counter(self.vocabulaires)
+      return occurences.most_common(nb_word)
+        
+
+    def normalization(self, liste):
+        liste_normaliser = []
+        wordnet_lemmatizer = WordNetLemmatizer()
+        stop_words = set(nltk.corpus.stopwords.words('english'))
+        for word in liste:
+            if word not in stop_words:
+                liste_normaliser.append(wordnet_lemmatizer.lemmatize(word, pos="v"))
+        return liste_normaliser
+
+
+    
     
 ################################################################################################
 
-corpus_reddit = Corpus("Corona")
-corpus_arxiv = Corpus("Corona")
-corpus_global = Corpus("Corona")
+# corpus_reddit = Corpus("Corona")
+# corpus_arxiv = Corpus("Corona")
+# corpus_global = Corpus("Corona")
 
-######### Source Reddit #########
-reddit = praw.Reddit(client_id='2R8dyFhAMrONHA', client_secret='HKBF3vfSYP6YOAPS4hgXf68OOJ4', user_agent='Reddit WebScraping')
-hot_posts = reddit.subreddit('Coronavirus').hot(limit=100)
+# ######### Source Reddit #########
+# reddit = praw.Reddit(client_id='2R8dyFhAMrONHA', client_secret='HKBF3vfSYP6YOAPS4hgXf68OOJ4', user_agent='Reddit WebScraping')
+# hot_posts = reddit.subreddit('Coronavirus').hot(limit=100)
 
-for post in hot_posts:
-    # Get comments of post i
-    try:
-      submission = reddit.submission(url=post.url);
-      nbComments = len(submission.comments)
-    except:
-      pass
-    datet = dt.datetime.fromtimestamp(post.created)
-    txt = post.title + ". "+ post.selftext
-    txt = txt.replace('\n', ' ')
-    txt = txt.replace('\r', ' ')
-    doc = RedditDocument(nbComments,
-                         datet,
-                         post.title,
-                         post.author_fullname,
-                         txt,
-                         post.url)
-    corpus_global.add_doc(doc)
-    corpus_reddit.add_doc(doc)
+# for post in hot_posts:
+#     # Get comments of post i
+#     try:
+#       submission = reddit.submission(url=post.url);
+#       nbComments = len(submission.comments)
+#     except:
+#       pass
+#     datet = dt.datetime.fromtimestamp(post.created)
+#     txt = post.title + ". "+ post.selftext
+#     txt = txt.replace('\n', ' ')
+#     txt = txt.replace('\r', ' ')
+#     doc = RedditDocument(nbComments,
+#                          datet,
+#                          post.title,
+#                          post.author_fullname,
+#                          txt,
+#                          post.url)
+#     corpus_global.add_doc(doc)
+#     corpus_reddit.add_doc(doc)
     
-######### Source Reddit #########
-url = 'http://export.arxiv.org/api/query?search_query=all:covid&start=0&max_results=100'
-data =  urllib.request.urlopen(url).read().decode()
-docs = xmltodict.parse(data)['feed']['entry'] # Liste de dictionnaire
+# ######### Source Reddit #########
+# url = 'http://export.arxiv.org/api/query?search_query=all:covid&start=0&max_results=100'
+# data =  urllib.request.urlopen(url).read().decode()
+# docs = xmltodict.parse(data)['feed']['entry'] # Liste de dictionnaire
 
-for i in docs:
-    datet = dt.datetime.strptime(i['published'], '%Y-%m-%dT%H:%M:%SZ')
-    try:
-        author = [aut['name'] for aut in i['author']][0]
-    except:
-        author = i['author']['name']
-    txt = i['title']+ ". " + i['summary']
-    txt = txt.replace('\n', ' ')
-    txt = txt.replace('\r', ' ')
-    doc = ArxivDocument(i['author'],
-                   datet,
-                   i['title'],
-                   author,
-                   txt,
-                   i['id']
-                   )
-    corpus_global.add_doc(doc)
-    corpus_arxiv.add_doc(doc)
+# for i in docs:
+#     datet = dt.datetime.strptime(i['published'], '%Y-%m-%dT%H:%M:%SZ')
+#     try:
+#         author = [aut['name'] for aut in i['author']][0]
+#     except:
+#         author = i['author']['name']
+#     txt = i['title']+ ". " + i['summary']
+#     txt = txt.replace('\n', ' ')
+#     txt = txt.replace('\r', ' ')
+#     doc = ArxivDocument(i['author'],
+#                    datet,
+#                    i['title'],
+#                    author,
+#                    txt,
+#                    i['id']
+#                    )
+#     corpus_global.add_doc(doc)
+#     corpus_arxiv.add_doc(doc)
 
-# Variété des champs léxical(nombre de mot unique utilisé par chaque author dans ces publication)
-# Histoire de savoir qui a le vocabulaire le plus riche
-freq,stats,voc = corpus_global.freq_stats_corpus2(True)
-df = pandas.DataFrame.from_dict(stats, orient='index')
-df = df.sort_values(by = 'total', ascending = False)
-fig = df.plot(figsize=(10,5),kind='bar', color=["#FFA07A","#885533"], title='Top 200 publications Redit-Arxiv par nombre de mots').get_figure()
-fig.savefig('histogramme/corpus/freq_corpus.png')
+# # Variété des champs léxical(nombre de mot unique utilisé par chaque author dans ces publication)
+# # Histoire de savoir qui a le vocabulaire le plus riche
+# freq,stats,voc = corpus_global.freq_stats_corpus2(True)
+# df = pandas.DataFrame.from_dict(stats, orient='index')
+# df = df.sort_values(by = 'total', ascending = False)
+# fig = df.plot(figsize=(10,5),kind='bar', color=["#FFA07A","#885533"], title='Top 200 publications Redit-Arxiv par nombre de mots').get_figure()
+# fig.savefig('histogramme/corpus/freq_corpus.png')
 
-# Récupération des comptages
-# Affichage des fréquences de mots aprés Tokenization(sans nettoyage)
+# # Récupération des comptages
+# # Affichage des fréquences de mots aprés Tokenization(sans nettoyage)
 
-# Récupération des comptages
-freq,stats,voc = corpus_reddit.freq_stats_corpus1()
-df = pandas.DataFrame.from_dict(stats, orient='index')
-df = df.sort_values(by = 'total', ascending = False).head(30)
-fig = df.plot(figsize=(10,5),kind='bar', color=["#008000","#aa5588"], title='Top 100 publications Redit par nombre de mots').get_figure()
-fig.savefig('histogramme/reddit/freq_reddit.png')
+# # Récupération des comptages
+# freq,stats,voc = corpus_reddit.freq_stats_corpus1()
+# df = pandas.DataFrame.from_dict(stats, orient='index')
+# df = df.sort_values(by = 'total', ascending = False).head(30)
+# fig = df.plot(figsize=(10,5),kind='bar', color=["#008000","#aa5588"], title='Top 100 publications Redit par nombre de mots').get_figure()
+# fig.savefig('histogramme/reddit/freq_reddit.png')
 
-# Récupération des comptages
-freq,stats,voc = corpus_arxiv.freq_stats_corpus1()
-df = pandas.DataFrame.from_dict(stats, orient='index')
-df = df.sort_values(by = 'total', ascending = False).head(30)
-fig = df.plot(figsize=(10,5),kind='bar', color=["#008000","#aa5588"], title='Top 100 publications Arxiv par nombre de mots').get_figure()
-fig.savefig('histogramme/arxiv/arxiv.png')
+# # Récupération des comptages
+# freq,stats,voc = corpus_arxiv.freq_stats_corpus1()
+# df = pandas.DataFrame.from_dict(stats, orient='index')
+# df = df.sort_values(by = 'total', ascending = False).head(30)
+# fig = df.plot(figsize=(10,5),kind='bar', color=["#008000","#aa5588"], title='Top 100 publications Arxiv par nombre de mots').get_figure()
+# fig.savefig('histogramme/arxiv/arxiv.png')
 
