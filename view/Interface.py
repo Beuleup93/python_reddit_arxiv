@@ -11,8 +11,6 @@ from matplotlib.figure import Figure
 from tkinter.messagebox import *
 nltk.download('wordnet')
 
-=======
-
 from tkinter.messagebox import showinfo
 
 try:
