@@ -8,9 +8,14 @@ import nltk
 import numpy as np
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.figure import Figure
+<<<<<<< HEAD
 from tkinter.messagebox import *
 nltk.download('wordnet')
 
+=======
+
+from tkinter.messagebox import showinfo
+>>>>>>> chissi
 
 try:
     import Tkinter as tk
@@ -83,7 +88,6 @@ class Interface:
         top.configure(cursor="xterm")
 
         self.Titre = tk.Label(top)
-        #self.Titre.place(relx=0.233, rely=0.089, height=40, width=390)
         self.Titre.pack()
         self.Titre.configure(background="#d9d9d9")
         self.Titre.configure(disabledforeground="#a3a3a3")
@@ -96,10 +100,7 @@ class Interface:
         
         #Fram champ de recherche
         self.zone_recherche = tk.LabelFrame(top)
-        # self.zone_recherche.place(relx=0.223, rely=0.197, relheight=0.17
-        #         , relwidth=0.507)
-        self.zone_recherche.place(x=10, y=50, relheight=0.13
-                 , width=300)
+        self.zone_recherche.place(x=10, y=50, relheight=0.13,width=300)
         self.zone_recherche.configure(relief='groove')
         self.zone_recherche.configure(foreground="black")
         self.zone_recherche.configure(text='''recherche''')
@@ -114,11 +115,8 @@ class Interface:
                                   ,foreground="#000000",text='''Mot clé''' )
         
         #champ de saisie pour le mot clé
-        global keyword
-        keyword=tk.StringVar()
-        self.EntryNA = tk.Entry(self.zone_recherche, textvariable=keyword)
-        self.EntryNA.place(relx=0.250, rely=0.272, height=24, width=130
-                , bordermode='ignore')
+        self.EntryNA = tk.Entry(self.zone_recherche, textvariable=IS.keyword)
+        self.EntryNA.place(relx=0.250, rely=0.272, height=24, width=130, bordermode='ignore')
         self.EntryNA.configure(background="white")
         self.EntryNA.configure(disabledforeground="#a3a3a3")
         self.EntryNA.configure(font="TkFixedFont")
@@ -127,10 +125,7 @@ class Interface:
         
         #Fram Paramétrage de la recherche
         self.parametre = tk.LabelFrame(top)
-        # self.parametre.place(relx=0.112, rely=0.44, relheight=0.439
-        #         , relwidth=0.764)
-        self.parametre.place(x=10, y=150, height=400
-                 , width=300)
+        self.parametre.place(x=10, y=150, height=400, width=300)
         self.parametre.configure(relief='groove')
         self.parametre.configure(foreground="black")
         self.parametre.configure(text='''Paramétrage de la recherche''')
@@ -138,10 +133,7 @@ class Interface:
         
         #Fram Résultat
         self.resultat = tk.LabelFrame(top)
-        # self.parametre.place(relx=0.112, rely=0.44, relheight=0.439
-        #         , relwidth=0.764)
-        self.resultat.place(x=320, y=50, height=550
-                 , width=900)
+        self.resultat.place(x=320, y=50, height=550, width=900)
         self.resultat.configure(relief='groove')
         self.resultat.configure(foreground="black")
         self.resultat.configure(text=' ')
@@ -151,8 +143,7 @@ class Interface:
         
         #Label choix-corpus
         self.Affichage = tk.Label(self.parametre)
-        self.Affichage.place(x=10, y=30 ,height=20.6, width=55.48
-                , bordermode='ignore')
+        self.Affichage.place(x=10, y=30 ,height=20.6, width=55.48, bordermode='ignore')
         self.Affichage.configure(background="#d9d9d9")
         self.Affichage.configure(disabledforeground="#a3a3a3")
         self.Affichage.configure(foreground="#000000")
@@ -160,11 +151,8 @@ class Interface:
         
         #champ selectionné sur choix-corpus
         self.TComboboxAff = ttk.Combobox(self.parametre)
-        self.TComboboxAff.place(x=70, y=30, height=24
-                , width=80, bordermode='ignore')
+        self.TComboboxAff.place(x=70, y=30, height=24, width=80, bordermode='ignore')
         self.TComboboxAff.configure(textvariable=IS.comboAff)
-        self.TComboboxAff.configure(validatecommand=alert)
-        #self.TComboboxAff.configure(takefocus="")
         self.TComboboxAff.configure(cursor="fleur")
         self.TComboboxAff.configure(values=["Reddit","Arxiv","Tous"])
         
@@ -175,7 +163,7 @@ class Interface:
                 , width=250)
         self.temporelle.configure(relief='groove')
         self.temporelle.configure(foreground="black")
-        self.temporelle.configure(text='''Filtrage temporelle''')
+        self.temporelle.configure(text='''Filtrage temporel''')
         self.temporelle.configure(background="#d9d9d9")
 
         
@@ -190,11 +178,9 @@ class Interface:
         
         #champ saisie jour
         self.entryJour = ttk.Combobox(self.temporelle)
-        self.entryJour.place(x=10, y=60, height=24
-                , width=65, bordermode='ignore')
+        self.entryJour.place(x=10, y=60, height=24, width=65, bordermode='ignore')
         self.entryJour.configure(textvariable=IS.jour)
         self.entryJour.configure(takefocus="")
-        #la liste jour contient les jours d'un mois
         days=['01','02','03','04','05','06','07','08','09','10','11',
               '12','13','14','15','16','17','18','19','20','21','22','23',
               '24','25','26','27','28','30','31']
@@ -202,8 +188,7 @@ class Interface:
         
         #◘Label Mois
         self.mois = tk.Label(self.temporelle)
-        self.mois.place(x=85, y=30
-                , bordermode='ignore')
+        self.mois.place(x=85, y=30, bordermode='ignore')
         self.mois.configure(background="#d9d9d9")
         self.mois.configure(disabledforeground="#a3a3a3")
         self.mois.configure(foreground="#000000")
@@ -239,46 +224,13 @@ class Interface:
         self.entryAnnee.configure(values=years)
         
         #Label champ limite
-        self.labelLimite=tk.Label(self.temporelle, text="Top", background="#d9d9d9")
-        self.labelLimite.place(x=85,y=80)
+        self.labelLimite=tk.Label(self.parametre, text="Top", background="#d9d9d9")
+        self.labelLimite.place(x=85,y=230)
         
         #valeur limit
-        self.valLimite=tk.Spinbox(self.temporelle, from_=1, to=10, width=5,textvariable=IS.limite)
-        self.valLimite.place(x=120,y=80)
+        self.valLimite=tk.Spinbox(self.parametre, from_=1, to=10, width=5,textvariable=IS.limite)
+        self.valLimite.place(x=120,y=230)
         
-        
-        # #Label Fréquence
-        # self.frequence = tk.Label(self.parametre)
-        # self.frequence.place(relx=0.03, rely=0.70
-        #         , bordermode='ignore')
-        # self.frequence.configure(background="#d9d9d9")
-        # self.frequence.configure(disabledforeground="#a3a3a3")
-        # self.frequence.configure(foreground="#000000")
-        # self.frequence.configure(text='''Fréquence''')
-        
-        # ##case frequence
-        # self.CheckFr = tk.Checkbutton(self.parametre, variable ="", \
-        #          onvalue = 1, offvalue = 0, )
-        # self.CheckFr.place(relx=0.04, rely=0.80, bordermode='ignore')
-        # self.CheckFr.configure(background="#d9d9d9") 
-
-        # #Label Score
-        # self.score = tk.Label(self.parametre)
-        # self.score.place(relx=0.30, rely=0.70
-        #         , bordermode='ignore')
-        # self.score.configure(background="#d9d9d9")
-        # self.score.configure(disabledforeground="#a3a3a3")
-        # self.score.configure(foreground="#000000")
-        # self.score.configure(text='''Score''')
-        
-        # ##case Score
-        # self.CheckScore = tk.Checkbutton(self.parametre, variable ="", \
-        #          onvalue = 1, offvalue = 0, )
-        # self.CheckScore.place(relx=0.30, rely=0.80, bordermode='ignore')
-        # self.CheckScore.configure(background="#d9d9d9")            
-
-        ############################################################
-        ##################### Gestion des menus ####################
         
         #Nettoyage & Normalisation
         self.menubar = tk.Menu(top)
@@ -286,12 +238,12 @@ class Interface:
         self.menu1.add_command(label="Stopwords", command=self.stopwords)
         self.menu1.add_command(label="Lemmatisation",command=self.lemmatisation)
         self.menu1.add_command(label="Stemming", command=self.stemming)
-        self.menubar.add_cascade(label="Nettoyage & Normalisation", menu=self.menu1)
-        
+        self.menu1.add_command(label="Search Words", command=self.relationImportance) 
+        self.menubar.add_cascade(label="Corpus actions", menu=self.menu1)
         
         #action date
         self.menu2 = tk.Menu(self.menubar, tearoff=0)
-        self.menu2.add_command(label="jour", command=self.day_management)
+        self.menu2.add_command(label="jour/mois", command=self.day_management)
         self.menu2.add_command(label="mois",command=self.month_management)
         self.menu2.add_command(label="année", command=self.year_management)
         self.menu2.add_command(label="date complète", command=self.date_management)
@@ -303,7 +255,7 @@ class Interface:
         
         # 1- boutton sur le mot clé
         
-        self.Button1 = tk.Button(self.zone_recherche, text="recherche", command="")
+        self.Button1 = tk.Button(self.zone_recherche, text="recherche", command=self.conconrdance)
         self.Button1.place(x=230,y=10, height=24)
         
         # 2- boutton choix corpus
@@ -312,8 +264,8 @@ class Interface:
         self.Button2.place(x=230,y=12, height=24)
         
         
-        #bouton recherche qui point vers la fonction getElement()
-        self.ButtonRecherche = tk.Button(top, command="")
+        #bouton de renitialisation 
+        self.ButtonRecherche = tk.Button(top, command=self.renitialisation)
         self.ButtonRecherche.place(x=10, y=575, height=28, width=76.13)
         self.ButtonRecherche.configure(activebackground="#ececec")
         self.ButtonRecherche.configure(activeforeground="#000000")
@@ -323,7 +275,7 @@ class Interface:
         self.ButtonRecherche.configure(highlightbackground="#d9d9d9")
         self.ButtonRecherche.configure(highlightcolor="black")
         self.ButtonRecherche.configure(pady="0")
-        self.ButtonRecherche.configure(text='''Recherche''')
+        self.ButtonRecherche.configure(text='''Reset''')
 
         #####instance corpus
         
@@ -335,140 +287,110 @@ class Interface:
         # destroy all widgets from frame
         for widget in frame.winfo_children():
            widget.destroy()
-        
-        # this will clear frame and frame will be empty
-        # if you want to hide the empty panel then
         frame.pack_forget()
+        
+    #### fonction renitialisation
+    def renitialisation(self):
+        self.clearFrame(self.resultat)
+        IS.jour.set("day")
+        IS.mois.set("Month")
+        IS.annee.set("Year")
+        IS.limite.set(10)
+        IS.comboAff.set("Tous")
+        IS.keyword.set("")
+        
+        
+    # action freq_stats sur l'ensemble de doonées 
+    def freq_stats(self,stats,couleur,titre,limite):
+        df = pandas.DataFrame.from_dict(stats, orient='index').head(limite)
+        df = df.sort_values(by = 'total', ascending = False)
+        fig = df.plot(figsize=(20,10),kind='bar', color=couleur, title=titre).get_figure()
+        canvas = FigureCanvasTkAgg(fig, master=self.resultat)
+        canvas.get_tk_widget().pack()
+        canvas.draw()
         
     def action_corpus(self):
         self.clearFrame(self.resultat)
-        Interface.fig=None
         var=IS.comboAff.get()
+        limite=IS.limite.get()
         
         if var=="Tous":
             freq,stats,voc = self.corpus_general.freq_stats_corpus1(True)
-            df = pandas.DataFrame.from_dict(stats, orient='index')
-            df = df.sort_values(by = 'total', ascending = False)
-            fig = df.plot(figsize=(20,10),kind='bar', color=["#FFA07A","#885533"], title='Top 200 publications Redit-Arxiv par nombre de mots').get_figure()
-            canvas = FigureCanvasTkAgg(fig, master=self.resultat)
-            canvas.get_tk_widget().pack()
-            canvas.draw()
+            titre="Top "+str(limite)+" publication(s) Redit-Arxiv par nombre de mots"
+            self.freq_stats(stats, IS.colorAllCorpus, titre, limite)
         elif var=="Reddit" :
             freq,stats,voc = self.corpus_reddit.freq_stats_corpus1(False)
-            df = pandas.DataFrame.from_dict(stats, orient='index').head(20)
-            df = df.sort_values(by = 'total', ascending = False)
-            fig = df.plot(figsize=(20,10),kind='bar', color=["#FFA07A","#885533"], title='Top 20 publications Redit par nombre de mots').get_figure()
-            canvas = FigureCanvasTkAgg(fig, master=self.resultat)
-            canvas.get_tk_widget().pack()
-            canvas.draw()
+            titre="Top "+str(limite)+" publication(s) Reddit par nombre de mots"
+            self.freq_stats(stats, IS.colorReddit, titre, limite)
         else :
             freq,stats,voc = self.corpus_arxiv.freq_stats_corpus1(False)
-            df = pandas.DataFrame.from_dict(stats, orient='index').head(20)
-            df = df.sort_values(by = 'total', ascending = False)
-            fig = df.plot(figsize=(20,10),kind='bar', color=["#FFA07A","#885533"], title='Top 20 publications Arxiv par nombre de mots').get_figure()
-            canvas = FigureCanvasTkAgg(fig, master=self.resultat)
-            canvas.get_tk_widget().pack()
-            canvas.draw()
+            titre="Top "+str(limite)+" publication(s) Arxiv par nombre de mots"
+            self.freq_stats(stats, IS.colorArxiv, titre, limite)
             
     #action stopwords
     def stopwords(self):
             self.clearFrame(self.resultat)
             var=IS.comboAff.get()
+            limite=IS.limite.get()
             if var=="Tous":
                 freq,stats,voc = self.corpus_general.freq_stats_corpus2(True)
-                df = pandas.DataFrame.from_dict(stats, orient='index')
-                df = df.sort_values(by = 'total', ascending = False)
-                fig = df.plot(figsize=(20,10),kind='bar', color=["#FFA07A","#885533"], title='Top 200 publications Redit-Arxiv apres suppression de stopwords').get_figure()
-                
-                canvas = FigureCanvasTkAgg(fig, master=self.resultat)
-                canvas.get_tk_widget().pack()
-                canvas.draw()
+                titre="Top "+str(limite)+" publication(s) Reddit-Arxiv apres suppression de stopwords"
+                self.freq_stats(stats, IS.colorAllCorpus, titre, limite)
             elif var=="Reddit":
-                print("bonjour")
                 freq,stats,voc = self.corpus_reddit.freq_stats_corpus2(False)
-                df = pandas.DataFrame.from_dict(stats, orient='index').head(20)
-                df = df.sort_values(by = 'total', ascending = False)
-                fig = df.plot(figsize=(20,10),kind='bar', color=["#FFA07A","#885533"], title='Top 20 publications Reddit apres suppression de stopwords').get_figure()
-                
-                canvas = FigureCanvasTkAgg(fig, master=self.resultat)
-                canvas.get_tk_widget().pack()
-                canvas.draw()
+                titre="Top "+str(limite)+" publication(s) Reddit apres suppression de stopwords"
+                self.freq_stats(stats, IS.colorReddit, titre, limite)
                
             else :
                 freq,stats,voc = self.corpus_arxiv.freq_stats_corpus2(False)
-                df = pandas.DataFrame.from_dict(stats, orient='index').head(20)
-                df = df.sort_values(by = 'total', ascending = False)
-                fig = df.plot(figsize=(20,10),kind='bar', color=["#FFA07A","#885533"], title='Top 20 publications Arxiv apres suppression de stopwords').get_figure()
-                canvas = FigureCanvasTkAgg(fig, master=self.resultat)
-                canvas.get_tk_widget().pack()
-                canvas.draw()
+                titre="Top "+str(limite)+" publication(s) Arxiv apres suppression de stopwords"
+                self.freq_stats(stats, IS.colorArxiv, titre, limite)
             
     #action lemmatisation
     def lemmatisation(self):
             self.clearFrame(self.resultat)
             var=IS.comboAff.get()
+            limite=IS.limite.get()
             if var=="Tous" : 
                 freq,stats,voc = self.corpus_general.freq_stats_corpus3(True)
-                df = pandas.DataFrame.from_dict(stats, orient='index')
-                df = df.sort_values(by = 'total', ascending = False)
-                fig = df.plot(figsize=(20,10),kind='bar', color=["#FFA07A","#885533"], title='Top 200 publications Redit-Arxiv apres lemmatisation').get_figure()
-                canvas = FigureCanvasTkAgg(fig, master=self.resultat)
-                canvas.get_tk_widget().pack()
-                canvas.draw()
+                titre="Top "+str(limite)+" publication(s) Reddit-Arxiv apres lemmatisation"
+                self.freq_stats(stats, IS.colorAllCorpus, titre, limite)
             elif var=="Reddit":
                 freq,stats,voc = self.corpus_reddit.freq_stats_corpus3(False)
-                df = pandas.DataFrame.from_dict(stats, orient='index')
-                df = df.sort_values(by = 'total', ascending = False).head(20)
-                fig = df.plot(figsize=(20,10),kind='bar', color=["#FFA07A","#885533"], title='Top 20 publications Reddit apres lemmatisation').get_figure()
-                canvas = FigureCanvasTkAgg(fig, master=self.resultat)
-                canvas.get_tk_widget().pack()
-                canvas.draw()
+                titre="Top "+str(limite)+" publication(s) Reddit apres lemmatisation"
+                self.freq_stats(stats, IS.colorReddit, titre, limite)
             else:
                 freq,stats,voc = self.corpus_arxiv.freq_stats_corpus3(False)
-                df = pandas.DataFrame.from_dict(stats, orient='index')
-                df = df.sort_values(by = 'total', ascending = False).head(20)
-                fig = df.plot(figsize=(20,10),kind='bar', color=["#FFA07A","#885533"], title='Top 20 publications Arxiv apres lemmatisation').get_figure()
-                canvas = FigureCanvasTkAgg(fig, master=self.resultat)
-                canvas.get_tk_widget().pack()
-                canvas.draw()
+                titre="Top "+str(limite)+" publication(s) Arxiv apres lemmatisation"
+                self.freq_stats(stats, IS.colorArxiv, titre, limite)
+                
             
     #action stemming
     def stemming(self):
             self.clearFrame(self.resultat)
             var=IS.comboAff.get()
+            limite=IS.limite.get()
             if var=="Tous":
                 freq,stats,voc = self.corpus_general.freq_stats_corpus4(True)
-                df = pandas.DataFrame.from_dict(stats, orient='index')
-                df = df.sort_values(by = 'total', ascending = False)
-                fig = df.plot(figsize=(20,10),kind='bar', color=["#FFA07A","#885533"], title='Top 200 publications Redit-Arxiv apres stemming').get_figure()
-                
-                canvas = FigureCanvasTkAgg(fig, master=self.resultat)
-                canvas.get_tk_widget().pack()
-                canvas.draw()
+                titre="Top "+str(limite)+" publication(s) Reddit-Arxiv apres stemming"
+                self.freq_stats(stats, IS.colorAllCorpus, titre, limite)   
             elif var=="Reddit":
                 freq,stats,voc = self.corpus_reddit.freq_stats_corpus4(False)
-                df = pandas.DataFrame.from_dict(stats, orient='index').head(20)
-                df = df.sort_values(by = 'total', ascending = False)
-                fig = df.plot(figsize=(20,10),kind='bar', color=["#FFA07A","#885533"], title='Top 20 publications Reddit apres stemming').get_figure()
-                
-                canvas = FigureCanvasTkAgg(fig, master=self.resultat)
-                canvas.get_tk_widget().pack()
-                canvas.draw()
+                titre="Top "+str(limite)+" publication(s) Reddit apres stemming"
+                self.freq_stats(stats, IS.colorReddit, titre, limite)
             else :
                 freq,stats,voc = self.corpus_arxiv.freq_stats_corpus4(False)
-                df = pandas.DataFrame.from_dict(stats, orient='index').head(20)
-                df = df.sort_values(by = 'total', ascending = False)
-                fig = df.plot(figsize=(20,10),kind='bar', color=["#FFA07A","#885533"], title='Top 20 publications Arxiv apres stemming').get_figure()
-                
-                canvas = FigureCanvasTkAgg(fig, master=self.resultat)
-                canvas.get_tk_widget().pack()
-                canvas.draw()
+                titre="Top "+str(limite)+" publication(s) Arxiv apres stemming"
+                self.freq_stats(stats, IS.colorArxiv, titre, limite)
+
     #########################################
     #les action sur la date
     
     #sur l'année
     def year_management(self):
         self.clearFrame(self.resultat)
+        IS.mois.set("")
+        IS.jour.set("")
         var_year=IS.annee.get()
         var_limite=IS.limite.get()
         var_corpus=IS.comboAff.get()
@@ -476,21 +398,25 @@ class Interface:
         if var_corpus=="Tous":
            result=self.corpus_general.most_frequent_word_by_year(var_year, var_limite)
            titre=" Le(s) "+str(var_limite)+" mots le(s) plus fréquent(s) en "+var_year+" sur les deux Corpus"
+           couleur=IS.colorAllCorpus
         elif var_corpus=="Reddit":
            result=self.corpus_reddit.most_frequent_word_by_year(var_year, var_limite)
            titre=" Le(s) "+str(var_limite)+" mots le(s) plus fréquent(s) en "+var_year+" sur Reddit"
+           couleur=IS.colorReddit
         else :
             result=self.corpus_arxiv.most_frequent_word_by_year(var_year, var_limite)
             titre=" Le(s) "+str(var_limite)+" mots le(s) plus fréquent(s) en "+var_year+" sur Arxiv"
+            couleur=IS.colorArxiv
         
-        #print(result)
         if len(result) ==0:
             showinfo("alerte", "Pas de resultat!")
         else:
             mon_dic=dict((x,y) for x, y in result)
-            #print(mon_dic)
+            # for key in mon_dic.keys():
+            #     if key.isdigit():
+            #         del mon_dic[key]
             df = pandas.DataFrame.from_dict(mon_dic, orient='index')
-            fig = df.plot(figsize=(20,10),kind='bar', color=["#FFA07A","#885533"], title=titre).get_figure()
+            fig = df.plot(figsize=(20,10),kind='bar', color=couleur, title=titre).get_figure()
             canvas = FigureCanvasTkAgg(fig, master=self.resultat)
             canvas.get_tk_widget().pack()
             canvas.draw()
@@ -498,6 +424,8 @@ class Interface:
     #sur le mois
     def month_management(self):
         self.clearFrame(self.resultat)
+        IS.annee.set("")
+        IS.jour.set("")
         var_month=IS.mois.get()
         var_limite=IS.limite.get()
         var_corpus=IS.comboAff.get()
@@ -505,26 +433,30 @@ class Interface:
         if var_corpus=="Tous":
            result=self.corpus_general.most_frequent_word_by_month(var_month, var_limite)
            titre=" Le(s) "+str(var_limite)+" mots le(s) plus fréquent(s) en "+var_month+" sur les deux Corpus"
+           couleur=IS.colorAllCorpus
         elif var_corpus=="Reddit":
            result=self.corpus_reddit.most_frequent_word_by_month(var_month, var_limite)
            titre=" Le(s) "+str(var_limite)+" mots le(s) plus fréquent(s) en "+var_month+" sur Reddit"
+           couleur=IS.colorReddit
         else :
             result=self.corpus_arxiv.most_frequent_word_by_month(var_month, var_limite)
             titre=" Le(s) "+str(var_limite)+" mots le(s) plus fréquent(s) en "+var_month+" sur Arxiv"
+            couleur=IS.colorArxiv
         
         if len(result) ==0:
             showinfo("alerte", "Pas de resultat!")
         else:
             mon_dic=dict((x,y) for x, y in result)
-            #print(mon_dic)
             df = pandas.DataFrame.from_dict(mon_dic, orient='index')
-            fig = df.plot(figsize=(20,10),kind='bar', color=["#FFA07A","#885533"], title=titre).get_figure()
+            fig = df.plot(figsize=(20,10),kind='bar', color=couleur, title=titre).get_figure()
             canvas = FigureCanvasTkAgg(fig, master=self.resultat)
             canvas.get_tk_widget().pack()
             canvas.draw()
     #pour un jour donné
     def day_management(self):
         self.clearFrame(self.resultat)
+        IS.annee.set("")
+        IS.mois.set("")
         var_day=IS.jour.get()
         var_limite=IS.limite.get()
         var_corpus=IS.comboAff.get()
@@ -532,20 +464,22 @@ class Interface:
         if var_corpus=="Tous":
            result=self.corpus_general.most_frequent_word_by_day(var_day, var_limite)
            titre=" Le(s) "+str(var_limite)+" mots le(s) plus fréquent(s) le "+var_day+" de chaque mois sur les deux Corpus"
+           couleur=IS.colorAllCorpus
         elif var_corpus=="Reddit":
            result=self.corpus_reddit.most_frequent_word_by_day(var_day, var_limite)
            titre=" Le(s) "+str(var_limite)+" mots le(s) plus fréquent(s) le "+var_day+" de chaque mois sur Reddit"
+           couleur=IS.colorReddit
         else :
             result=self.corpus_arxiv.most_frequent_word_by_day(var_day, var_limite)
             titre=" Le(s) "+str(var_limite)+" mots le(s) plus fréquent(s) le "+var_day+" de chaque mois sur Arxiv"
+            couleur=IS.colorArxiv
         
         if len(result) ==0:
             showinfo("alerte", "Pas de resultat!")
         else:
             mon_dic=dict((x,y) for x, y in result)
-            #print(mon_dic)
             df = pandas.DataFrame.from_dict(mon_dic, orient='index')
-            fig = df.plot(figsize=(20,10),kind='bar', color=["#FFA07A","#885533"], title=titre).get_figure()
+            fig = df.plot(figsize=(20,10),kind='bar', color=couleur, title=titre).get_figure()
             canvas = FigureCanvasTkAgg(fig, master=self.resultat)
             canvas.get_tk_widget().pack()
             canvas.draw()
@@ -555,9 +489,7 @@ class Interface:
         var_day=IS.jour.get()
         var_m=IS.mois.get()
         var_year=IS.annee.get()
-        dic_date={"January":"01","February":"02","March":"03","April":"04","May":"05","June":"06",
-                  "July":"07","August":"08","September":"09","October":"10","November":"11","December":"12"}
-        var_month=dic_date.get(var_m)
+        var_month=IS.dic_date.get(var_m)
         var_date=var_year+"-"+var_month+"-"+var_day
         var_limite=IS.limite.get()
         var_corpus=IS.comboAff.get()
@@ -565,26 +497,98 @@ class Interface:
         if var_corpus=="Tous":
            result=self.corpus_general.most_frequent_word(var_date, var_limite)
            titre=" Le(s) "+str(var_limite)+" mots le(s) plus fréquent(s) le "+var_date+" sur les deux Corpus"
+           couleur=IS.colorAllCorpus
         elif var_corpus=="Reddit":
            result=self.corpus_reddit.most_frequent_word(var_date, var_limite)
            titre=" Le(s) "+str(var_limite)+" mots le(s) plus fréquent(s) le "+var_date+" sur Reddit"
+           couleur=IS.colorReddit
         else :
             result=self.corpus_arxiv.most_frequent_word(var_date, var_limite)
             titre=" Le(s) "+str(var_limite)+" mots le(s) plus fréquent(s) le "+var_date+" sur Arxiv"
+            couleur=IS.colorArxiv
         
         if len(result) ==0:
             showinfo("alerte", "Pas de resultat!")
         else:
             mon_dic=dict((x,y) for x, y in result)
-            #print(mon_dic)
             df = pandas.DataFrame.from_dict(mon_dic, orient='index')
-            fig = df.plot(figsize=(20,10),kind='bar', color=["#FFA07A","#885533"], title=titre).get_figure()
+            fig = df.plot(figsize=(20,10),kind='bar', color=couleur, title=titre).get_figure()
             canvas = FigureCanvasTkAgg(fig, master=self.resultat)
             canvas.get_tk_widget().pack()
             canvas.draw()
-   
-def alert():
-   showinfo("alerte", "Bravo!")
+            
+    ##################################### word_cummun and specifique
+    
+    def relationImportance(self):
+        self.clearFrame(self.resultat)
+        wordCommun,specificReddit,specifArxiv=self.corpus_general.wordcommun_and_wordspecific()
+        var_corpus=IS.comboAff.get()
+        
+        if var_corpus=='Tous' :
+            df=sorted(list(wordCommun))
+            message="Mots communs pour les deux corpus"
+        elif var_corpus =='Reddit':
+            df=sorted(list(specificReddit))
+            message='Mots spécifiques pour Reddit'
+        else :
+            df=sorted(list(specifArxiv))
+            message='Mots spécifiques pour Arxiv'
+        
+        
+        titre=tk.Label(self.resultat, text=message, background="#d9d9d9",font="-family {8514oem} -size 14")
+        titre.pack()
+        
+        scrollbar = tk.Scrollbar(self.resultat)
+        scrollbar.pack(side="right", fill="y")
+        
+        listbox = tk.Listbox(self.resultat, yscrollcommand=scrollbar.set)
+        for i in df:
+            listbox.insert("end", i)
+        listbox.pack(side="left", fill="both")
+        scrollbar.config(command=listbox.yview)
+        
+    #### recherche de la conconrdance
+    
+    def conconrdance(self):
+        self.clearFrame(self.resultat)
+        result=self.corpus_general.concorde(IS.keyword.get()).head(100)
+        if len(result)==0:
+            showinfo("alerte", "Pas de resultat!")
+        else :
+            vargauche=result['gauche'].values.tolist()
+            vardroite=result['droite'].values.tolist()
+            motif=result['motif'].values.tolist()
+            
+            titre=tk.Label(self.resultat, text="concordance du mot "+IS.keyword.get(), background="#d9d9d9",
+                           font="-family {8514oem} -size 14")
+            titre.pack()
+            
+            self.scrollbar = tk.Scrollbar(self.resultat,command=self.scrollBoth)
+            self.scrollbar.pack(side="right", fill="y")
+            
+            self.listbox1 = tk.Listbox(self.resultat, yscrollcommand=self.scrollbar.set)
+            for i in vargauche:
+                self.listbox1.insert("end", i)
+            self.listbox1.pack(side="left", fill="both")
+            
+            
+            self.listbox2 = tk.Listbox(self.resultat, yscrollcommand=self.scrollbar.set)
+            for i in motif:
+                self.listbox2.insert("end", i)
+            self.listbox2.pack(side="left", fill="both")
+            
+            self.listbox3 = tk.Listbox(self.resultat, yscrollcommand=self.scrollbar.set)
+            for i in vardroite:
+                self.listbox3.insert("end", i)
+            self.listbox3.pack(side="left", fill="both")
+            
+    def scrollBoth(self,*args):
+        self.listbox1.yview(*args)
+        self.listbox2.yview(*args)
+        self.listbox3.yview(*args)
+        self.scrollbar.set(*args)
+        
+        
 
 if __name__ == '__main__':
     vp_start_gui()
