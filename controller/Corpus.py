@@ -446,8 +446,65 @@ class Corpus():
             if word not in stop_words:
                 liste_normaliser.append(wordnet_lemmatizer.lemmatize(word, pos="v"))
         return liste_normaliser
+    
+    ###### Mot commun et spécifique 
+    def wordcommun_and_wordspecific(self):
+      # recuperation des deux source nettoyer et normaliser
+      all_source = self.find_documents_source()
+      # source reddit et source arxiv
+      source_reddit, source_arxiv = all_source['reddit'],all_source['arxiv']
+      #comprehension
+      word_communs = [wc for wc in source_reddit if wc in source_arxiv]
+      word_specific_reddit = [word for word in source_reddit if not word in word_communs]
+      word_specific_arxiv = [word for word in source_arxiv if not word in word_communs]
+      return (set(word_communs),set(word_specific_reddit),set(word_specific_arxiv))
 
-
+    def find_documents_source(self):
+      documents_source = defaultdict(list)
+      for ndoc, doc in self.collection.items():
+        if isinstance(doc,RedditDocument):
+          documents_source['reddit'] += self.nettoyer_corpus(doc.get_text())
+        else:
+           documents_source['arxiv'] += self.nettoyer_corpus(doc.get_text())
+      return documents_source
+  
+    
+    def nettoyer_corpus(self,text_corpus):
+        #Ce tokenizer  de nltk supprime en meme temps les ponctuation, sépare les apostrophes
+        tokenizer = nltk.RegexpTokenizer(r'\w+')
+        #supprimer les url dans mon corpus
+        url_pattern = re.compile(r'https?://\S+|www\.\S+')
+        text_corpus = url_pattern.sub(r'', text_corpus)
+        #supprime les nombres dans mon corpus
+        text_corpus=re.sub("\d+", "", text_corpus)
+        #mettre en minuscule et tokenize text
+        text_corpus = tokenizer.tokenize(text_corpus.lower())
+        #Supprime les tokens qui ne sont pas alphabetique
+        text_corpus = [token for token in text_corpus if token.isalpha()]
+        # suppression des mots peu informatifs
+        stop_words = set(nltk.corpus.stopwords.words('english'))
+        text_corpus = [token for token in text_corpus if not token in stop_words]
+        #Lemmatizer: utiliser pour la lemmatisation
+        wordnet_lemmatizer = WordNetLemmatizer()
+        text_corpus = [wordnet_lemmatizer.lemmatize(token, pos="v") for token in text_corpus]
+        # Supprimons les tokens de longueur égale à 1
+        text_corpus = [token for token in text_corpus if len(token)>1]
+        return text_corpus
+    
+    
+    ####### fonction concorde
+    def concorde(self,motif):
+       motif=motif.lower()
+       #transformons notre collection en chaine
+       text_corpus=". ".join(str(doc) for doc in self.collection.values())
+       #tokenize et supprime ponctuation
+       text_corpus=self.nettoyer_corpus(text_corpus)
+       #reconversion en chaine
+       text_corpus = " ".join(str(x) for x in text_corpus)
+       gauche=re.findall(r"(.*?:^|\S+\s+\S+\s+\S+) {} ".format(motif), text_corpus)
+       droite=re.findall(r" {} (s*\S+\s+\S+\s+\S+|$)".format(motif), text_corpus)
+       motif=[motif]*len(gauche)
+       return pandas.DataFrame(list(zip(gauche, motif,droite)),columns =['gauche', 'motif','droite'])
     
     
 ################################################################################################
