@@ -8,8 +8,9 @@ import nltk
 import numpy as np
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.figure import Figure
-
 from tkinter.messagebox import *
+nltk.download('wordnet')
+
 
 try:
     import Tkinter as tk
