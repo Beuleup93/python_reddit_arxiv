@@ -3,6 +3,11 @@
     
 # Back End
     # NLTK: telecharger ces dépendances
+    # Praw
+    # urlib
+    # pandas
+    # numpy
+   
 # Front
     # Matplotlib
     # Tkinter
